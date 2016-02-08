@@ -1,9 +1,0 @@
-#include <Rcpp.h>
-#include <iostream>
-using namespace Rcpp;
-using namespace std;
-
-
-//' Calculating Voronoi-Delaunaey tesselation of points
-//'
-// [[Rcpp::export]]
