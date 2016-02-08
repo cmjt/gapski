@@ -1,0 +1,23 @@
+Package: gapski
+Type: Package
+Title: Estimation of parameters for void spaces
+Version: 0.0.1
+Date: 2015-06-21
+Author: Charlotte Jones-Todd <cmjt@st-andrews.ac.uk>
+Maintainer: Charlotte Jones-Todd <cmjt@st-andrews.ac.uk>
+Depends:
+    R (>= 3.0.0),
+    Rcpp (>= 0.11.5)
+Imports:
+    nspp,
+    optimx,
+    gsl
+LinkingTo: Rcpp
+Suggests:
+    testthat
+Description: This package provides functions for the simulation and parameter
+    estimation of  point process models with void spaces.
+License: GPL
+URL: https://github.com/cmjt/gapski
+LazyData: TRUE
+RoxygenNote: 5.0.0
