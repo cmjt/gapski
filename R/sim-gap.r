@@ -50,6 +50,7 @@ sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1)), model="
         stop("No points generated.")
     }
     #point ids
+    browser()
     id = seq(1:n.points)
     #deletion algorithms - put in helper file when sorted
     if(model=="void"){

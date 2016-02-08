@@ -9,22 +9,43 @@ using namespace std;
 //' Calculating centres of radii of Delauney circumcircles
 //' @inheritParams D.gaps
 // [[Rcpp::export]]
-NumericVector D_gaps(const NumericMatrix& points){
-  int edges = 3;
-  int n_points = 2;
-  double x1, x2, x3, y1, y2, y3;
+NumericVector D_gaps(const NumericMatrix& triangs){
+  int nrow = triangs.nrow();
+  int ncol = triangs.ncol();
+  NumericVector out(ncol + 1);
+  double l1 [2] = {5,5} ;
+  double l2 [2] = {6,-2};
+  double l3 [2]  = {2,-4};
+  double mr = (l2[1]-l1[1])/(l2[0]-l1[0]);
+  double mt = (l3[1]-l2[1])/(l3[0]-l2[0]);
+  double x = (mr*mt*(l3[1]-l1[1]) + mr*(l2[0]+l3[0]) - mt*(l1[0]+l2[0]))/(2*(mr-mt));
+  double y = (-1/mr)*(x -((l1[0]+l2[0])/2)) + ((l1[1]+l2[1])/2);
+  double r = sqrt(pow((x-l1[0]),2) + pow((y-l1[1]),2));
+  out [0] = x; out [1] = y; out [2] = r;
+  return out;
+ }
+
+//' Calculating centres of radii of Delauney circumcircles
+//' @inheritParams D.gaps
+// [[Rcpp::export]]
+NumericVector gaps(const NumericMatrix& triangs){
+  int nrow = triangs.nrow();
+  int ncol = triangs.ncol();
+  NumericMatrix out(nrow/3,3);
   double mr, mt, x, y, r;
-  NumerixMatrix out(points.nrow/edges,n_points);
-  NumericMatrix triangle(edges, n_points);
-  for(i = 0; i < edges; i +=3){
-    triangle(i,) = points(i,);
+  int m = 0;
+  for (int i = 0; i < nrow; i +=2){
+    for (int j = 0; j < ncol; j++){
+      mr = (triangs(i+1,j+1)-triangs(i,j+1))/(triangs(i+1,j)-triangs(i,j));
+      mt = (triangs(i+2,j+1)-triangs(i+1,j+1))/(triangs(i+2,j)-triangs(i+1,j));
+      x = (mr*mt*(triangs(i+2,j+1)-triangs(i,j+1)) + mr*(triangs(i+1,j)+triangs(i+2,j)) - mt*(triangs(i,j)+triangs(i+1,j)))/(2*(mr-mt));
+      y = (-1/mr)*(x -((triangs(i,j)+triangs(i+1,j))/2)) + ((triangs(i,j+1)+triangs(i+1,j+1))/2);
+      r = sqrt(pow((x-triangs(i,j)),2) + pow((y-triangs(i+1,j+1)),2));
+      out(m,0) = x; out(m,  1) = y; out(m, 2) = r;
+      m ++;
+    }
   }
-for (i = 0; i < (n_points - 1); i++){
-    for (j = i + 1; j < n_points; j++){
-     mr = triangle(y2-y1)/triangle(x2-x1);
-     mt = triangle(y3-y2)/triangle(x3-x2);
-     x = (mr*mt*triangle(y3-y1)+mr*triangle(x2+x3)-mt*triangle(x1+x2))/(2*(mr-mt));
-     y = (-1/mr)*(x-(triangle(x1+x2)/2))+triangle(y1+y2)/2;
-     r = sqrt(pow(triangle(x1)-x,2) + pow(triangle(y1)-y,2));
-	      }
+
+  return out;
+
  }
