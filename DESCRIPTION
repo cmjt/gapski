@@ -10,8 +10,9 @@ Depends:
     Rcpp (>= 0.11.5)
 Imports:
     nspp,
-    optimx,
-    gsl
+    deldir,
+    spatstat,
+    fields
 LinkingTo: Rcpp
 Suggests:
     testthat

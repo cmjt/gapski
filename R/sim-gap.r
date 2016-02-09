@@ -15,7 +15,8 @@
 #' @return A matrix containing simulated point locations.
 #' @param pars A named vector of parameter values. Required
 #' parameters are \code{gap.par}, the parameter relating to the deletion algorithm;
-#' \code{lambda} the density of points in the domain.
+#' \code{lambda} the density of points in the domain, the parameter \code{gaps} roughly specifying the
+#' number of "voids" the user wishes.
 #' @param d a numeric value specifying the number of dimensions the point process is to be simulated in, by default this is 2.
 #' @param lims An argument specifying the limits of the domain, for 1D this is a vector, for 2D or greater; for \code{rectangle} domain a matrix with two colums, corresponding to the upper and lower limits of each dimension, respectively, for \code{hypersphere} domain a vector specifying the radius of the sphere. By deafault this specifies the unit square.
 #' @param model A character specifying the type of void point process wanted, \code{void} by deafault. Other options are
@@ -31,10 +32,11 @@ sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1)), model="
     ## Parameter values.
     gap.par <- pars["gap.par"]
     lambda <- pars["lambda"]
+    gaps <- pars["gaps"]
     ## Number of dimensions.
     dims <- d
     ## Calculating survey area.
-    area <- prod(apply(lims, 1, diff))
+    ifelse(domain.type =="rectangle",area <- prod(apply(lims, 1, diff)),area<-pi*lims[1,2]^2)
     expected.n.points = area*lambda
     n.points = rpois(n =1 ,lambda=expected.n.points)
     if(domain.type=="rectangle"){
@@ -44,23 +46,18 @@ sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1)), model="
             locs[, i] <- runif(n.points, lims[i, 1], lims[i, 2])
         }
     }else if (domain.type=="hypersphere"){
-        locs<-as.matrix(as.matrix(unifsphere(n=n.points,d=dims,R=lims[,1])))
+        locs<-as.matrix(as.matrix(unifsphere(n=n.points,d=dims,R=lims[1,2])))
     }
     if (n.points == 0){
         stop("No points generated.")
     }
-    #point ids
-    browser()
-    id = seq(1:n.points)
-    #deletion algorithms - put in helper file when sorted
+    #deletion algorithms 
     if(model=="void"){
-        # let user chose number of gaps i.e. 2 in sample
-      id<-sample(id,2)
-      locs.d<-locs[-id,]
-      dists <- rdist(locs.d,locs[id,])
-      dists<-which(dists<=gap.par,arr.ind=TRUE)
-      locs.out<-locs.d[-dists[,1],]
+     locs.out<- voids(n.points=n.points,locs=locs,gap.par=gap.par,gaps=gaps)
     }
-    locs.out
+    if(nrow(locs.out)==0){
+        stop("All points deleted")
+    }
+    return(locs.out)
 }
 
