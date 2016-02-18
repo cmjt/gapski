@@ -18,7 +18,7 @@ plot.gapski <- function(points=NULL,lims=NULL,plot.delauney=FALSE , ...){
    y<-cent[,2]
    rad<-cent[,3]
    area<-cent[,4]
-   symbols(x,y,circles=rad,fg="gray",bg="gray",xlim=lims[1,],ylim=lims[2,])
+   symbols(x,y,circles=rad,fg="black",bg="gray",asp=1,inches=FALSE,xlim=lims[1,],ylim=lims[2,],lty=2)
    points(points,pch="+",cex=2)
    if(plot.delauney){
        plot(deldir(points[,1],points[,2]),add=TRUE)
