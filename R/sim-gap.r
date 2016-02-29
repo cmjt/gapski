@@ -14,50 +14,59 @@
 #'
 #' @return A matrix containing simulated point locations.
 #' @param pars A named vector of parameter values. Required
-#' parameters are \code{gap.par}, the parameter relating to the deletion algorithm;
-#' \code{lambda} the density of points in the domain, the parameter \code{gaps} roughly specifying the
-#' number of "voids" the user wishes.
+#' parameters are \code{D}, the density of gaps in the pattern;
+#' \code{lambda} the density of all points in the domain, before deletion, the parameter \code{R} the radius of the spherical gaps in the pattern.
 #' @param d a numeric value specifying the number of dimensions the point process is to be simulated in, by default this is 2.
-#' @param lims An argument specifying the limits of the domain, for 1D this is a vector, for 2D or greater; for \code{rectangle} domain a matrix with two colums, corresponding to the upper and lower limits of each dimension, respectively, for \code{hypersphere} domain a vector specifying the radius of the sphere. By deafault this specifies the unit square.
-#' @param model A character specifying the type of void point process wanted, \code{void} by deafault. Other options are
-#' \code{Mat1}, \code {Mat2}, and \code{dominance}.
-#' @param domain.type A character specifying the type of domain requested, either \code{rectangle} or \code{hypersphere} for
-#' simulated point proces in 2 or more dimensions, by deafault this is \code{rectangle}.
+#' @param lims An argument specifying the limits of the domain, for 1D this is a vector, for 2D or greater. By deafault this specifies the unit square.
+
 #' @export
-sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1)), model="void", domain.type="rectangle"){
+sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1))){
     ## Allowing lims to be a vector if only one dimension.
     if (!is.matrix(lims)){
         lims <- matrix(lims, nrow = 1)
     }
     ## Parameter values.
-    gap.par <- pars["gap.par"]
+    D <- pars["D"]
     lambda <- pars["lambda"]
-    gaps <- pars["gaps"]
+    R <- pars["R"]
     ## Number of dimensions.
     dims <- d
     ## Calculating survey area.
-    ifelse(domain.type =="rectangle",area <- prod(apply(lims, 1, diff)),area<-pi*lims[1,2]^2)
+    area <- prod(apply(lims, 1, diff))
+    #Generating number of original points and their locations
     expected.n.points = area*lambda
     n.points = rpois(n =1 ,lambda=expected.n.points)
-    if(domain.type=="rectangle"){
-        ## Generating location points.
-        locs <- matrix(0, nrow = n.points, ncol = dims)
-        for (i in 1:dims){
-            locs[, i] <- runif(n.points, lims[i, 1], lims[i, 2])
+    points <- matrix(runif(dims*n.points), ncol = dims)
+     if(nrow(points)==0){
+        stop("No points generated")
+    }
+    ## Generating number of parents and their locations
+    n.parents <- rpois(1, D)
+    parents <- matrix(runif(dims*n.parents), ncol = dims)
+    if(nrow(parents)==0){
+        stop("No monsters generated")
+    }
+    ## If any parents exist, delete nearby points (with distances
+    ## subject to periodic boundary conditions - this is taken directly from Ben Stevenson's nspp package.).
+    if (n.parents > 1){
+        pbc_dists <- matrix(0, nrow = n.points, ncol = n.parents)
+        for (j in 1:n.points){
+            for (k in 1:n.parents){
+                pbc_dists[j, k] <- nspp:::pbc_distances(rbind(points[j, , drop = FALSE],
+                                                       parents[k, , drop = FALSE]),
+                                                 lims = lims)[1]
+            }
         }
-    }else if (domain.type=="hypersphere"){
-        locs<-as.matrix(as.matrix(unifsphere(n=n.points,d=dims,R=lims[1,2])))
+        ## Indicator for whether or not a monster is near each point.
+        is.near.parent <- apply(pbc_dists, 1, function(x, R) any(x < R), R = R)
+    } else {
+        ## No points are deleted if there are no monsters.
+        is.near.parent <- rep(FALSE, n.points)
     }
-    if (n.points == 0){
-        stop("No points generated.")
-    }
-    #deletion algorithms 
-    if(model=="void"){
-     locs.out<- voids(n.points=n.points,locs=locs,gap.par=gap.par,gaps=gaps)
-    }
-    if(nrow(locs.out)==0){
+    final.points <- points[!is.near.parent, ]
+     if(nrow(final.points)==0){
         stop("All points deleted")
     }
-    return(locs.out)
+    return(final.points)
 }
 
