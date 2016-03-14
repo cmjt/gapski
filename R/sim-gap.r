@@ -18,9 +18,15 @@
 #' \code{lambda} the density of all points in the domain, before deletion, the parameter \code{R} the radius of the spherical gaps in the pattern.
 #' @param d a numeric value specifying the number of dimensions the point process is to be simulated in, by default this is 2.
 #' @param lims An argument specifying the limits of the domain, for 1D this is a vector, for 2D or greater. By deafault this specifies the unit square.
+#' @param plot.points Logical, if \code{TRUE}, simulated aunts and niece
+#' point locations will be plotted (only for 2D).
+#' @param plot.empirical Logical, if \code{TRUE}, the empirical Palm
+#' intensity is plotted, taken from the \code{nspp} package 
+#' @param return.parents Logical, if \code{TRUE}, a named list of matricies is returned
+#' of both the observed points and aunt locations
 
 #' @export
-sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1))){
+sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1)),plot.points=FALSE,plot.empirical=FALSE,return.parents=FALSE){
     ## Allowing lims to be a vector if only one dimension.
     if (!is.matrix(lims)){
         lims <- matrix(lims, nrow = 1)
@@ -67,6 +73,23 @@ sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1))){
      if(nrow(final.points)==0){
         stop("All points deleted")
     }
-    return(final.points)
+    if (plot.points){
+        if (dims == 2){
+            plot.new()
+            plot.window(xlim = lims[1, ], ylim = lims[2, ])
+            points(parents, pch = 4, lwd = 2, col = "grey")
+            points(final.points,pch=20)
+            box()
+        } else {
+            warning("Plotting points only implemented for two dimensions.")
+        }
+        if (plot.empirical){
+            warning("Both 'plot.points' and 'plot.empirical' are TRUE, the latter is being ignored.")
+        }
+    } else if (plot.empirical){
+        nspp:::empirical.palm(final.points, lims)
+    }
+   if(return.parents){return(list(observed=final.points,aunts=parents))}else{
+                                                                            return(final.points)}
 }
 
