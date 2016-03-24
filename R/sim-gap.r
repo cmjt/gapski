@@ -26,7 +26,7 @@
 #' of both the observed points and aunt locations
 
 #' @export
-sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1)),plot.points=FALSE,plot.empirical=FALSE,return.parents=FALSE){
+sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1)),plot.points=FALSE,plot.empirical=FALSE,return.aunts=FALSE){
     ## Allowing lims to be a vector if only one dimension.
     if (!is.matrix(lims)){
         lims <- matrix(lims, nrow = 1)
@@ -87,9 +87,14 @@ sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1)),plot.poi
             warning("Both 'plot.points' and 'plot.empirical' are TRUE, the latter is being ignored.")
         }
     } else if (plot.empirical){
-        nspp:::empirical.palm(final.points, lims)
+        plot.new()
+        plot.window(xlim = c(0,5*R ), ylim = c(lambda*exp(-D*(Vd(R,dims)))-0.2*lambda, lambda+0.4*lambda))
+        nspp:::empirical.palm(final.points, lims,add=TRUE)
+        box()
+        axis(1,at=round(seq(0,5*R,length.out=5),2))
+        axis(2)
     }
-   if(return.parents){return(list(observed=final.points,aunts=parents))}else{
+   if(return.aunts){return(list(observed=final.points,aunts=parents))}else{
                                                                             return(final.points)}
 }
 
