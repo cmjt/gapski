@@ -84,3 +84,23 @@ summary.gapski <- function(object, ...){
     out
 }
 
+#' Plotting the gapski model fit.
+#'
+#'
+#' @param object A fitted model from \link{fit.gap}.
+#' @inheritParams coef.gapski
+#' @method plot gapski
+#'
+#' @export
+
+plot.gapski <- function(object=NULL, ...){
+    parm <- 1:3
+    coefs <- coef(object)[parm]
+    xx <- seq(0,0.5,length.out=100)
+    dims<-ncol(object$args$lims)
+    plot(xx,palm.intensity(xx,coefs[3],coefs[2],coefs[1],dims),type="l")
+}
+   
+
+
+
