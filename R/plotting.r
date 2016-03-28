@@ -14,11 +14,9 @@ voids.gap <- function(object=NULL,plot.delauney=FALSE ,circumcirc=FALSE,...){
      lims <- object$args$lims
      if (ncol(lims) != 2){
         stop("Plotting circumcircles only implemented for 2D")}
-     browser()
      cent<-circumcircle(points=points,lims=lims)
      r <- data.frame(x=cent[,1],y=cent[,2],radius=cent[,3],area=cent[,4])
      r <- r[order(-r[,3]),]
-     r <- r[rdist(r[,1:2])[,1]>=2*coefs[1],]
      r <- r[1:round(coefs[2]),]
      if(circumcirc){
          colnames(r)<-c("x","y","radius","area")
