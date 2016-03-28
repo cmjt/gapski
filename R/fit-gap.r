@@ -47,7 +47,7 @@ fit.gap <- function(points = NULL, lims = NULL,trunc = NULL, D.sv = NULL, D.boun
     upper <-c(R.bounds[2], D.bounds[2], lambda.bounds[2])
     palm.intensity=palm.intensity
     integrand=integrand
-    mmpp.ll=mmpp.ll
+    mmpp.ll
     if (any(is.nan(log(sv)))) traceback()
     fit <-  optimx(par = log(sv), fn = mmpp.ll,
                    method = "L-BFGS-B",
@@ -67,8 +67,5 @@ fit.gap <- function(points = NULL, lims = NULL,trunc = NULL, D.sv = NULL, D.boun
     names(pars) <- c("R", "D", "lambda")
     out <- list(pars = pars, args = args)
     class(out) <- "gapski"
-    ## Important function that should be run at all times.
-    giraffe.picture()
-    out
 }
 
