@@ -21,7 +21,7 @@ NumericVector centers(const NumericMatrix& triangs){
   x = (mr*mt*(triangs(i+2,j+1)-triangs(i,j+1)) + mr*(triangs(i+1,j)+triangs(i+2,j)) - mt*(triangs(i,j)+triangs(i+1,j)))/(2*(mr-mt));
   y = (-1/mr)*(x -((triangs(i,j)+triangs(i+1,j))/2)) + ((triangs(i,j+1)+triangs(i+1,j+1))/2);
   r = sqrt(pow((x-triangs(i,j)),2) + pow((y-triangs(i,j+1)),2));
-  ar = 2*M_PI*r;
+  ar = M_PI*pow(r,2);
   out(m,0) = x; out(m,  1) = y; out(m, 2) = r; out(m,3) = ar;
   m ++;
   }

@@ -98,7 +98,7 @@ plot.gapski <- function(object=NULL, ...){
     coefs <- coef(object)[parm]
     xx <- seq(0,0.5,length.out=100)
     dims<-ncol(object$args$lims)
-    plot(xx,palm.intensity(xx,coefs[3],coefs[2],coefs[1],dims),type="l")
+    plot(xx,palm.intensity(xx,coefs[3],coefs[2],coefs[1],dims),type="l",ylab=expression(lambda[0](r,theta)),xlab=expression(r))
 }
    
 
