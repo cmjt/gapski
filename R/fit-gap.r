@@ -67,5 +67,6 @@ fit.gap <- function(points = NULL, lims = NULL,trunc = NULL, D.sv = NULL, D.boun
     names(pars) <- c("R", "D", "lambda")
     out <- list(pars = pars, args = args)
     class(out) <- "gapski"
+    out
 }
 
