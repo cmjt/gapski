@@ -16,8 +16,12 @@ voids.gap <- function(object=NULL,plot.delauney=FALSE ,circumcirc=FALSE,...){
         stop("Plotting circumcircles only implemented for 2D")}
      cent<-circumcircle(points=points,lims=lims)
      r <- data.frame(x=cent[,1],y=cent[,2],radius=cent[,3],area=cent[,4])
-     r <- r[order(-r[,3]),]
-     r <- r[1:round(coefs[2]),]
+     r<-r[r[,3]>=coefs[1],]
+     dists<-rdist(r[,1:2])
+     diag(dists)<-coefs[1]+1
+     #r<- r[apply(dists,1,min)>=coefs[1]/2,]
+     r<-r[order(-r[,3]),]
+     r<-r[1:(2*round(coefs[2])),]
      if(circumcirc){
          colnames(r)<-c("x","y","radius","area")
          return(r)
