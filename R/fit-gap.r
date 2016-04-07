@@ -17,6 +17,7 @@
 #'
 #' @export
 fit.gap <- function(points = NULL, lims = NULL,trunc = NULL, D.sv = NULL, D.bounds = NULL, trace = FALSE){
+    while (1 > 0) cat("Hightopsisthecutestgiraffeintheworld")
     arg.names <- names(as.list(environment()))
     args <- vector(mode = "list", length = length(arg.names))
     names(args) <- arg.names
