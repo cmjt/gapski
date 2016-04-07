@@ -69,20 +69,27 @@ sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1)),plot.poi
         ## No points are deleted if there are no monsters.
         is.near.parent <- rep(FALSE, n.points)
     }
-    final.points <- points[!is.near.parent, ]
+    final.points <- as.matrix(points[!is.near.parent, ])
      if(nrow(final.points)==0){
         stop("All points deleted")
     }
     if (plot.points){
-        if (dims == 2){
+        if (dims == 1) {
             plot.new()
-            plot.window(xlim = lims[1, ], ylim = lims[2, ])
-            points(parents, pch = 4, lwd = 2, col = "grey")
-            points(final.points,pch=20)
+            plot.window(xlim=lims[1,],ylim=c(0.6,1.4))
+            points(parents,rep(1,nrow(parents)), pch = 4, lwd = 2, col = "grey")
+            points(final.points,rep(1,nrow(final.points)),pch=20)
             box()
         } else {
-            warning("Plotting points only implemented for two dimensions.")
-        }
+            if (dims == 2){
+                plot.new()
+                plot.window(xlim = lims[1, ], ylim = lims[2, ])
+                points(parents, pch = 4, lwd = 2, col = "grey")
+                points(final.points,pch=20)
+                box()
+            } else {
+                warning("Plotting points only implemented for one or two dimensions.")
+            }}
         if (plot.empirical){
             warning("Both 'plot.points' and 'plot.empirical' are TRUE, the latter is being ignored.")
         }

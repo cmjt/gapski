@@ -20,6 +20,10 @@ fit.gap <- function(points = NULL, lims = NULL,trunc = NULL, D.sv = NULL, D.boun
     arg.names <- names(as.list(environment()))
     args <- vector(mode = "list", length = length(arg.names))
     names(args) <- arg.names
+     ## Allowing lims to be a vector if only one dimension.
+    if (!is.matrix(lims)){
+        lims <- matrix(lims, nrow = 1)
+    }
     for (i in arg.names){
         if (!is.null(get(i))){
             args[[i]] <- get(i)
