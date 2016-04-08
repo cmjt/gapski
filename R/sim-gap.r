@@ -49,9 +49,9 @@ sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1)),plot.poi
     ## Generating number of parents and their locations
     n.parents <- rpois(1, D)
     parents <- matrix(runif(dims*n.parents), ncol = dims)
-    if(nrow(parents)==0){
-        stop("No monsters generated")
-    }
+    ## if(nrow(parents)==0){
+    ##     stop("No monsters generated")
+    ## }
     ## If any parents exist, delete nearby points (with distances
     ## subject to periodic boundary conditions - this is taken directly from Ben Stevenson's nspp package.).
     if (n.parents > 1){
@@ -76,7 +76,7 @@ sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1)),plot.poi
     if (plot.points){
         if (dims == 1) {
             plot.new()
-            plot.window(xlim=lims[1,],ylim=c(0.6,1.4))
+            plot.window(xlim=lims[1,],ylim=c(0.8,1.2))
             points(parents,rep(1,nrow(parents)), pch = 4, lwd = 2, col = "grey")
             points(final.points,rep(1,nrow(final.points)),pch=20)
             box()
