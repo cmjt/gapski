@@ -25,7 +25,7 @@ boot.gap <- function(fit, N, prog = TRUE){
         pb <- txtProgressBar(min = 0, max = N, style = 3)
     }
     for (i in 1:N){
-        #browser()
+        # browser()
         args$points <- tryCatch(sim.gap(pars=pars[c("R","D","lambda")],lims=lims),error=function(e) next)
         args$D.sv<-pars["D"]
         args$trace<-FALSE
