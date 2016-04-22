@@ -18,6 +18,7 @@ boot.gap <- function(fit, N, prog = TRUE){
     pars <- fit$pars
     n.pars <- length(pars)
     lims <- args$lims
+    dims <- nrow(lims)
     #bootstrapping 
     boots <- matrix(0, nrow = N, ncol = n.pars)
     ## Setting up progress bar.
@@ -26,7 +27,7 @@ boot.gap <- function(fit, N, prog = TRUE){
     }
     for (i in 1:N){
         # browser()
-        args$points <- tryCatch(sim.gap(pars=pars[c("R","D","lambda")],lims=lims),error=function(e) next)
+        args$points <- tryCatch(sim.gap(pars=pars[c("R","D","lambda")],lims = lims, d = dims),error=function(e) next)
         args$D.sv<-pars["D"]
         args$trace<-FALSE
         fit.boot <- tryCatch(do.call("fit.gap", args),error=function(e) e)
