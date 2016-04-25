@@ -26,13 +26,15 @@ boot.gap <- function(fit, N, prog = TRUE){
         pb <- txtProgressBar(min = 0, max = N, style = 3)
     }
     for (i in 1:N){
-        # browser()
-        args$points <- tryCatch(sim.gap(pars=pars[c("R","D","lambda")],lims = lims, d = dims),error=function(e) next)
-        args$D.sv<-pars["D"]
-        args$trace<-FALSE
-        fit.boot <- tryCatch(do.call("fit.gap", args),error=function(e) e)
-        if(inherits(fit.boot,"error")) next
-        boots[i, ] <- fit.boot$pars
+        #browser()
+        args$points <- tryCatch(sim.gap(pars=pars[c("R","D","lambda")],lims = lims, d = dims),error=function(e) e)
+        if(!inherits(args$points, "error")){
+            args$D.sv<-pars["D"]
+            args$trace<-FALSE
+            fit.boot <- tryCatch(do.call("fit.gap", args),error=function(e) e)
+            if(inherits(fit.boot,"error")) next
+            boots[i, ] <- fit.boot$pars
+        }
         ## Updating progress bar.
         if (prog){
             setTxtProgressBar(pb, i)
@@ -42,8 +44,13 @@ boot.gap <- function(fit, N, prog = TRUE){
         close(pb)
     }
     colnames(boots) <- names(pars)
+    boots <- boots[boots[,1]!=0,] # dirty gets rid of zero entries
+    # warning to say full bootstrap was not carried out
+    if(nrow(boots)!=N){
+        warning(paste("Standard errors only based on", nrow(boots), "simulations",sep = " "))
+    }
     fit$boots <- boots
-    fit$se <- apply(boots, 2, sd)
+    fit$se <- apply(na.omit(boots), 2, sd)
     class(fit) <- c("boot.gapski", class(fit))
     fit
 }
