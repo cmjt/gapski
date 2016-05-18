@@ -21,4 +21,4 @@ Description: This package provides functions for the simulation and parameter
 License: GPL
 URL: https://github.com/cmjt/gapski
 LazyData: TRUE
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1
