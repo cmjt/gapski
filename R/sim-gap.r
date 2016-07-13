@@ -83,7 +83,7 @@ sim.gap <- function(pars = NULL, d = 2 , lims = rbind(c(0, 1), c(0, 1)),plot.poi
         } else {
             if (dims == 2){
                 plot.new()
-                plot.window(xlim = lims[1, ], ylim = lims[2, ])
+                plot.window(xlim = lims[1, ], ylim = lims[2, ],asp=1)
                 points(parents, pch = 4, lwd = 2, col = "grey")
                 points(final.points,pch=20)
                 box()

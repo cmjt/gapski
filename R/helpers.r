@@ -4,7 +4,7 @@
 ## uses deldi, and triang-list function from the deldir package
 
 circumcircle<-function(points,lims){
-    points<-triang.list(delauney<-deldir(points[,1],points[,2]))
+    points<-triang.list(delauney = deldir(points[,1],points[,2]))
     points<-lapply(points,as.matrix)
     points<-lapply(points,function (x) x[,2:3])
     points<-do.call(rbind, lapply(points, unlist))

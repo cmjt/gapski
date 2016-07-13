@@ -37,7 +37,7 @@ coef.gapski <- function(object, ...){
 #' approximation, and "percentile", for the percentile method.
 #' @param ... Other parameters (for S3 generic compatability).
 #'
-#' @method confint boot gapski
+#' @method confint boot.gapski
 #'
 #' @export
 confint.boot.gapski <- function(object, parm = c("R", "D", "lambda"), level = 0.95, method = "percentile", ...){
