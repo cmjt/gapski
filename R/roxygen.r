@@ -1,9 +1,7 @@
 ## Roxygen code for NAMESPACE.
 #' @import Rcpp
-#' @importFrom deldir deldir
-#' @importFrom triang.list deldir
-#' @importFrom runifsphere nspp
+#' @import deldir
 #' @importFrom spatstat owin
-#' @importFrom fields rdists
+#' @importFrom fields rdist
 #' @useDynLib gapski
 NULL
