@@ -1,5 +1,5 @@
 #!/bin/bash
-cd ~/Documants/Gitwork/gapski
+cd ~/Git/gapski
 rm -rfv man
 rm -fv NAMESPACE
 R --slave -e "library(Rcpp); compileAttributes()"
