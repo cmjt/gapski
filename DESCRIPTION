@@ -12,10 +12,9 @@ Imports:
     nspp,
     deldir,
     spatstat,
-    fields
+    fields,
+    optimx
 LinkingTo: Rcpp
-Suggests:
-    testthat
 Description: This package provides functions for the simulation and parameter
     estimation of  point process models with void spaces.
 License: GPL
