@@ -1,2 +1,5 @@
 src/*.o
 src/*.so
+gapski.Rcheck/
+package-build/
+
